@@ -3,7 +3,7 @@ import { useParams, useLocation, Link } from 'react-router-dom'
 import { prescriptionService } from '../services/api'
 import { Pill, AlertTriangle, RefreshCw, ChevronRight, Info } from 'lucide-react'
 
-export default async function PrescriptionResult() {
+export default function PrescriptionResult() {
   const { id } = useParams()
   const location = useLocation()
   const [result, setResult] = useState(location.state?.result || null)
@@ -20,74 +20,121 @@ export default async function PrescriptionResult() {
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="w-10 h-10 border-2 border-teal-500/30 border-t-teal-500 rounded-full animate-spin" />
+      <div className="text-center">
+        <div className="w-10 h-10 border-2 border-teal-500/30 border-t-teal-500 rounded-full animate-spin mx-auto mb-4" />
+        <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Loading results...</p>
+      </div>
     </div>
   )
 
   if (!result) return (
     <div className="max-w-2xl mx-auto px-4 py-10 text-center">
-      <p className="text-slate-400">Result not found.</p>
+      <p style={{ color: 'var(--text-muted)' }}>Result not found.</p>
       <Link to="/prescription" className="btn-primary mt-4 inline-block">Try Again</Link>
     </div>
   )
-  if (Notification.permission !== "granted") {
-    await Notification.requestPermission()
-  }
-// Store subscription in backend for real push, or use in-browser
-new Notification(`💊 Time for ${medName}`, { body: "Take your medication now" })
+
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 space-y-5">
 
       {/* Header */}
       <div className="animate-fade-up">
         <div className="flex items-center gap-3 mb-1">
-          <Pill className="w-5 h-5 text-teal-400" />
-          <h1 className="font-display text-2xl font-bold text-white">Prescription Explained</h1>
+          <Pill className="w-5 h-5" style={{ color: 'var(--accent)' }} />
+          <h1 className="font-display text-2xl font-bold" style={{ color: 'var(--text)' }}>
+            Prescription Explained
+          </h1>
         </div>
-        <p className="text-slate-400 text-sm">{result.medications?.length || 0} medication(s) found and explained</p>
+        <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+          {result.medications?.length || 0} medication(s) found and explained
+        </p>
       </div>
 
       {/* Medications */}
       {result.medications?.map((med, i) => (
-        <div key={i} className="card p-5 animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
-          {/* Drug Name */}
+        <div
+          key={i}
+          className="card p-5 animate-fade-up"
+          style={{ animationDelay: `${i * 0.1}s` }}
+        >
+          {/* Drug name + dosage row */}
           <div className="flex items-start justify-between gap-3 mb-4">
             <div>
-              <h2 className="font-display text-lg font-semibold text-white">{med.name}</h2>
+              <h2 className="font-display text-lg font-semibold" style={{ color: 'var(--text)' }}>
+                {med.name}
+              </h2>
               {med.generic_name && med.generic_name !== med.name && (
-                <p className="text-slate-500 text-xs mt-0.5">Generic: {med.generic_name}</p>
+                <p className="text-xs mt-0.5" style={{ color: 'var(--text-faint)' }}>
+                  Generic: {med.generic_name}
+                </p>
               )}
             </div>
-            <div className="text-right">
-              {med.dosage && <p className="text-teal-400 text-sm font-mono">{med.dosage}</p>}
-              {med.frequency && <p className="text-slate-400 text-xs mt-0.5">{med.frequency}</p>}
+            <div className="text-right flex-shrink-0">
+              {med.dosage && (
+                <p className="text-sm font-mono" style={{ color: 'var(--accent)' }}>
+                  {med.dosage}
+                </p>
+              )}
+              {med.frequency && (
+                <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
+                  {med.frequency}
+                </p>
+              )}
             </div>
           </div>
 
           <div className="space-y-3">
+
             {/* Purpose */}
             {med.purpose && (
-              <div className="p-3 bg-slate-800/40 rounded-xl">
-                <p className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">What it's for</p>
-                <p className="text-slate-300 text-sm leading-relaxed">{med.purpose}</p>
+              <div
+                className="p-3 rounded-xl"
+                style={{ background: 'var(--card)', border: '1px solid var(--border)' }}
+              >
+                <p className="text-xs font-mono uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)' }}>
+                  What it's for
+                </p>
+                <p className="text-sm leading-relaxed" style={{ color: 'var(--text)' }}>
+                  {med.purpose}
+                </p>
               </div>
             )}
 
-            {/* How to take */}
+            {/* Instructions */}
             {med.instructions && (
-              <div className="p-3 bg-slate-800/40 rounded-xl">
-                <p className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">How to take it</p>
-                <p className="text-slate-300 text-sm leading-relaxed">{med.instructions}</p>
+              <div
+                className="p-3 rounded-xl"
+                style={{ background: 'var(--card)', border: '1px solid var(--border)' }}
+              >
+                <p className="text-xs font-mono uppercase tracking-wider mb-1" style={{ color: 'var(--text-muted)' }}>
+                  How to take it
+                </p>
+                <p className="text-sm leading-relaxed" style={{ color: 'var(--text)' }}>
+                  {med.instructions}
+                </p>
               </div>
             )}
 
             {/* Side Effects */}
             {med.side_effects?.length > 0 && (
-              <div className="p-3 bg-slate-800/40 rounded-xl">
-                <p className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-2">Common side effects</p>
+              <div
+                className="p-3 rounded-xl"
+                style={{ background: 'var(--card)', border: '1px solid var(--border)' }}
+              >
+                <p className="text-xs font-mono uppercase tracking-wider mb-2" style={{ color: 'var(--text-muted)' }}>
+                  Common side effects
+                </p>
                 <div className="flex flex-wrap gap-1.5">
                   {med.side_effects.map((se, j) => (
-                    <span key={j} className="text-xs bg-yellow-500/10 text-yellow-400/80 border border-yellow-500/20 px-2 py-0.5 rounded-full">
+                    <span
+                      key={j}
+                      className="text-xs px-2 py-0.5 rounded-full"
+                      style={{
+                        background: 'var(--accent-bg)',
+                        border: '1px solid var(--accent-border)',
+                        color: 'var(--accent)',
+                      }}
+                    >
                       {se}
                     </span>
                   ))}
@@ -97,15 +144,17 @@ new Notification(`💊 Time for ${medName}`, { body: "Take your medication now" 
 
             {/* Warnings */}
             {med.warnings?.length > 0 && (
-              <div className="p-3 bg-red-500/8 border border-red-500/20 rounded-xl">
+              <div className="p-3 rounded-xl" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
                 <div className="flex items-center gap-1.5 mb-2">
                   <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
-                  <p className="text-xs font-mono text-red-400/80 uppercase tracking-wider">Important warnings</p>
+                  <p className="text-xs font-mono text-red-400 uppercase tracking-wider">
+                    Important warnings
+                  </p>
                 </div>
                 <ul className="space-y-1">
                   {med.warnings.map((w, j) => (
-                    <li key={j} className="text-red-300/80 text-xs leading-relaxed flex gap-2">
-                      <span className="text-red-500 mt-0.5">•</span>
+                    <li key={j} className="text-xs leading-relaxed flex gap-2" style={{ color: 'var(--text)' }}>
+                      <span className="text-red-400 mt-0.5 flex-shrink-0">•</span>
                       {w}
                     </li>
                   ))}
@@ -116,10 +165,14 @@ new Notification(`💊 Time for ${medName}`, { body: "Take your medication now" 
             {/* Duration */}
             {med.duration && (
               <div className="flex items-center gap-2 text-sm">
-                <Info className="w-4 h-4 text-slate-500" />
-                <span className="text-slate-400">Course duration: <span className="text-slate-200">{med.duration}</span></span>
+                <Info className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--text-faint)' }} />
+                <span style={{ color: 'var(--text-muted)' }}>
+                  Course duration:{' '}
+                  <span style={{ color: 'var(--text)' }}>{med.duration}</span>
+                </span>
               </div>
             )}
+
           </div>
         </div>
       ))}
@@ -136,11 +189,17 @@ new Notification(`💊 Time for ${medName}`, { body: "Take your medication now" 
       </div>
 
       {/* Disclaimer */}
-      <div className="p-4 bg-slate-900/50 border border-slate-800 rounded-xl">
-        <p className="text-slate-500 text-xs leading-relaxed">
-          ⚠️ This explanation is for educational purposes only. Always follow your doctor's prescribed instructions. Consult your pharmacist for drug interactions and personalized advice.
+      <div
+        className="p-4 rounded-xl"
+        style={{ background: 'var(--accent-bg)', border: '1px solid var(--accent-border)' }}
+      >
+        <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+          ⚠️{' '}
+          <strong style={{ color: 'var(--text)' }}>Medical Disclaimer:</strong>{' '}
+          This explanation is for educational purposes only. Always follow your doctor's prescribed instructions. Consult your pharmacist for drug interactions and personalized advice.
         </p>
       </div>
+
     </div>
   )
 }
