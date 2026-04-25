@@ -2,86 +2,252 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  * {
-    box-sizing: border-box;
-  }
+/* ═══════════════════════════════════════════════════════════
+   CSS VARIABLES — one place controls all colours
+   Dark mode = default. Light mode overrides below.
+═══════════════════════════════════════════════════════════ */
 
-  body {
-    @apply bg-slate-950 text-slate-100 font-body antialiased;
-    background-image:
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(20, 184, 166, 0.12), transparent),
-      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(13, 148, 136, 0.06), transparent);
-    background-attachment: fixed;
-  }
+:root {
+  --bg-page:        #020617;
+  --bg-card:        rgba(15, 23, 42, 0.70);
+  --bg-card-inner:  rgba(30, 41, 59, 0.55);
+  --bg-input:       #0f172a;
+  --bg-nav:         rgba(2, 6, 23, 0.88);
 
-  h1, h2, h3 {
-    @apply font-display;
-  }
+  --border-card:    rgba(51, 65, 85, 0.60);
+  --border-input:   #334155;
+  --border-nav:     rgba(51, 65, 85, 0.50);
+
+  --text-primary:   #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted:     #475569;
+  --text-input:     #f1f5f9;
+  --text-placeholder: #475569;
+
+  --teal-main:      #14b8a6;
+  --teal-hover:     #2dd4bf;
+  --teal-subtle:    rgba(20, 184, 166, 0.12);
+  --teal-border:    rgba(20, 184, 166, 0.30);
+  --teal-text:      #2dd4bf;
+
+  --red-bg:         rgba(239, 68, 68, 0.10);
+  --red-border:     rgba(239, 68, 68, 0.25);
+  --red-text:       #f87171;
+  --red-body:       rgba(248, 113, 113, 0.80);
+
+  --yellow-bg:      rgba(234, 179, 8, 0.10);
+  --yellow-border:  rgba(234, 179, 8, 0.25);
+  --yellow-text:    #fbbf24;
+
+  --btn-sec-bg:     #1e293b;
+  --btn-sec-hover:  #334155;
+  --btn-sec-text:   #cbd5e1;
+  --btn-sec-border: #334155;
 }
 
+/* ── LIGHT MODE — rich, saturated, not washed out ── */
+html.light {
+  /* Page background: deep teal-green tint, not plain white */
+  --bg-page:        #cff3ec;
+
+  /* Cards: clean white with slight warmth */
+  --bg-card:        rgba(255, 255, 255, 0.97);
+
+  /* Inner sections inside cards: soft teal-grey tint */
+  --bg-card-inner:  rgba(36, 97, 84, 0.35);
+
+  /* Inputs: pure white */
+  --bg-input:       #ffffff;
+
+  /* Navbar: white with teal tint */
+  --bg-nav:         rgba(255, 255, 255, 0.95);
+
+  /* Borders: visible teal tint so structure is clear */
+  --border-card:    rgba(20, 184, 166, 0.22);
+  --border-input:   #a7f3d0;
+  --border-nav:     rgba(20, 184, 166, 0.18);
+
+  /* Text: very dark for contrast on light background */
+  --text-primary:   #57a6a5;   /* teal-950 — deep teal-black for headings */
+  --text-secondary: #0f4b43;   /* dark teal-slate for body text */
+  --text-muted:     #5eada0;   /* muted teal-grey */
+  --text-input:     #042f2e;
+  --text-placeholder: #9ecfc9;
+
+  /* Teal stays vivid */
+  --teal-main:      #0d9488;   /* slightly darker teal for contrast on light */
+  --teal-hover:     #14b8a6;
+  --teal-subtle:    rgba(13, 148, 136, 0.10);
+  --teal-border:    rgba(13, 148, 136, 0.30);
+  --teal-text:      #0d9488;
+
+  /* Status colours adjusted for light background */
+  --red-bg:         rgba(220, 38, 38, 0.08);
+  --red-border:     rgba(220, 38, 38, 0.22);
+  --red-text:       #b91c1c;
+  --red-body:       #b91c1c;
+
+  --yellow-bg:      rgba(180, 83, 9, 0.08);
+  --yellow-border:  rgba(180, 83, 9, 0.22);
+  --yellow-text:    #92400e;
+
+  /* Secondary button */
+  --btn-sec-bg:     #ccfbf1;
+  --btn-sec-hover:  #99f6e4;
+  --btn-sec-text:   #134e4a;
+  --btn-sec-border: #5eead4;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BASE
+═══════════════════════════════════════════════════════════ */
+@layer base {
+  * { box-sizing: border-box; }
+
+  body {
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(20, 184, 166, 0.10), transparent),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(13, 148, 136, 0.05), transparent);
+    background-attachment: fixed;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  h1, h2, h3 { font-family: 'Fraunces', serif; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS — all use CSS vars, auto-respond to both modes
+═══════════════════════════════════════════════════════════ */
 @layer components {
+
   .card {
-    @apply bg-slate-900/60 border border-slate-800/60 rounded-2xl backdrop-blur-sm;
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 1rem;
+    backdrop-filter: blur(8px);
+    transition: background 0.25s ease, border-color 0.25s ease;
   }
 
   .btn-primary {
-    @apply bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold px-6 py-3 rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-teal-500/25 active:scale-95;
+    @apply font-semibold px-6 py-3 rounded-xl transition-all duration-200 active:scale-95;
+    background-color: var(--teal-main);
+    color: #fff;
   }
+  .btn-primary:hover {
+    background-color: var(--teal-hover);
+    box-shadow: 0 6px 20px rgba(20, 184, 166, 0.30);
+  }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .btn-secondary {
-    @apply bg-slate-800 hover:bg-slate-700 text-slate-100 font-medium px-6 py-3 rounded-xl transition-all duration-200 border border-slate-700;
+    @apply font-medium px-6 py-3 rounded-xl transition-all duration-200;
+    background: var(--btn-sec-bg);
+    color: var(--btn-sec-text);
+    border: 1px solid var(--btn-sec-border);
   }
+  .btn-secondary:hover { background: var(--btn-sec-hover); }
 
   .btn-ghost {
-    @apply text-slate-400 hover:text-teal-400 font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+    @apply font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+    color: var(--text-muted);
   }
+  .btn-ghost:hover { color: var(--teal-main); }
 
   .input-field {
-    @apply w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500
-           focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20
-           transition-all duration-200 font-body;
+    @apply w-full rounded-xl px-4 py-3 transition-all duration-200;
+    background: var(--bg-input);
+    border: 1px solid var(--border-input);
+    color: var(--text-input);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .input-field::placeholder { color: var(--text-placeholder); }
+  .input-field:focus {
+    outline: none;
+    border-color: var(--teal-main);
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15);
   }
 
   .label {
-    @apply block text-sm font-medium text-slate-400 mb-2;
+    @apply block text-sm font-medium mb-2;
+    color: var(--text-secondary);
   }
 
+  /* Risk badges */
   .badge-urgent {
-    @apply bg-red-500/15 text-red-400 border border-red-500/30 px-3 py-1 rounded-full text-sm font-medium;
+    background: var(--red-bg);
+    color: var(--red-text);
+    border: 1px solid var(--red-border);
+    @apply px-3 py-1 rounded-full text-sm font-semibold;
   }
-
   .badge-high {
-    @apply bg-orange-500/15 text-orange-400 border border-orange-500/30 px-3 py-1 rounded-full text-sm font-medium;
+    @apply bg-orange-500/10 text-orange-600 border border-orange-500/20 px-3 py-1 rounded-full text-sm font-semibold;
   }
-
   .badge-medium {
-    @apply bg-yellow-500/15 text-yellow-400 border border-yellow-500/30 px-3 py-1 rounded-full text-sm font-medium;
+    background: var(--yellow-bg);
+    color: var(--yellow-text);
+    border: 1px solid var(--yellow-border);
+    @apply px-3 py-1 rounded-full text-sm font-semibold;
   }
-
   .badge-low {
-    @apply bg-teal-500/15 text-teal-400 border border-teal-500/30 px-3 py-1 rounded-full text-sm font-medium;
+    background: var(--teal-subtle);
+    color: var(--teal-text);
+    border: 1px solid var(--teal-border);
+    @apply px-3 py-1 rounded-full text-sm font-semibold;
   }
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { @apply bg-slate-900; }
-::-webkit-scrollbar-thumb { @apply bg-slate-700 rounded-full; }
-::-webkit-scrollbar-thumb:hover { @apply bg-slate-600; }
+/* ═══════════════════════════════════════════════════════════
+   PRESCRIPTION RESULT — section boxes using CSS vars
+═══════════════════════════════════════════════════════════ */
+.rx-purpose-box {
+  background: var(--teal-subtle);
+  border: 1px solid var(--teal-border);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+}
+.rx-purpose-box .rx-label { color: var(--teal-text); }
+.rx-purpose-box .rx-body  { color: var(--text-secondary); }
 
-/* Animations */
+.rx-info-box {
+  background: var(--bg-card-inner);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+}
+.rx-info-box .rx-label { color: var(--text-secondary); }
+.rx-info-box .rx-body  { color: var(--text-secondary); }
+
+.rx-warning-box {
+  background: var(--red-bg);
+  border: 1px solid var(--red-border);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+}
+.rx-warning-box .rx-warn-label { color: var(--red-text); }
+.rx-warning-box .rx-warn-body  { color: var(--red-body); }
+
+/* ═══════════════════════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════════════════════════ */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-card); border-radius: 9999px; }
+
+/* ═══════════════════════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════════════════════ */
 .animate-fade-up {
-  animation: fadeUp 0.5s ease forwards;
+  animation: fadeUp 0.45s ease forwards;
   opacity: 0;
 }
-
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
-.stagger-1 { animation-delay: 0.1s; }
-.stagger-2 { animation-delay: 0.2s; }
-.stagger-3 { animation-delay: 0.3s; }
-.stagger-4 { animation-delay: 0.4s; }
+.stagger-1 { animation-delay: 0.08s; }
+.stagger-2 { animation-delay: 0.16s; }
+.stagger-3 { animation-delay: 0.24s; }
+.stagger-4 { animation-delay: 0.32s; }

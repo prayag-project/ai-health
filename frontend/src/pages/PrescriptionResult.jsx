@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useParams, useLocation, Link } from 'react-router-dom'
 import { prescriptionService } from '../services/api'
-import { Pill, AlertTriangle, RefreshCw, ChevronRight, Info } from 'lucide-react'
+import { Pill, AlertTriangle, RefreshCw, ChevronRight, Info, Clock } from 'lucide-react'
 
-export default async function PrescriptionResult() {
+export default function PrescriptionResult() {
   const { id } = useParams()
   const location = useLocation()
   const [result, setResult] = useState(location.state?.result || null)
@@ -20,74 +20,137 @@ export default async function PrescriptionResult() {
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="w-10 h-10 border-2 border-teal-500/30 border-t-teal-500 rounded-full animate-spin" />
+      <div
+        className="w-10 h-10 rounded-full border-2 animate-spin"
+        style={{ borderColor: 'var(--border-card)', borderTopColor: 'var(--teal-main)' }}
+      />
     </div>
   )
 
   if (!result) return (
     <div className="max-w-2xl mx-auto px-4 py-10 text-center">
-      <p className="text-slate-400">Result not found.</p>
+      <p style={{ color: 'var(--text-secondary)' }}>Result not found.</p>
       <Link to="/prescription" className="btn-primary mt-4 inline-block">Try Again</Link>
     </div>
   )
-  if (Notification.permission !== "granted") {
-    await Notification.requestPermission()
-  }
-// Store subscription in backend for real push, or use in-browser
-new Notification(`💊 Time for ${medName}`, { body: "Take your medication now" })
+
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 space-y-5">
 
       {/* Header */}
       <div className="animate-fade-up">
         <div className="flex items-center gap-3 mb-1">
-          <Pill className="w-5 h-5 text-teal-400" />
-          <h1 className="font-display text-2xl font-bold text-white">Prescription Explained</h1>
+          <Pill className="w-5 h-5" style={{ color: 'var(--teal-text)' }} />
+          <h1
+            className="font-display text-2xl font-bold"
+            style={{ color: 'var(--text-primary)' }}
+          >
+            Prescription Explained
+          </h1>
         </div>
-        <p className="text-slate-400 text-sm">{result.medications?.length || 0} medication(s) found and explained</p>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
+          {result.medications?.length || 0} medication(s) found — explained in plain English
+        </p>
       </div>
 
-      {/* Medications */}
+      {/* Truncation note if model capped the list */}
+      {result.note && (
+        <div
+          className="p-3 rounded-xl text-sm"
+          style={{ background: 'var(--yellow-bg)', border: '1px solid var(--yellow-border)', color: 'var(--yellow-text)' }}
+        >
+          ⚠️ {result.note}
+        </div>
+      )}
+
+      {/* One card per medication */}
       {result.medications?.map((med, i) => (
-        <div key={i} className="card p-5 animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
-          {/* Drug Name */}
-          <div className="flex items-start justify-between gap-3 mb-4">
+        <div
+          key={i}
+          className="card p-5 animate-fade-up"
+          style={{ animationDelay: `${i * 0.08}s` }}
+        >
+
+          {/* Medicine name + dosage header */}
+          <div
+            className="flex items-start justify-between gap-3 mb-4 pb-4"
+            style={{ borderBottom: '1px solid var(--border-card)' }}
+          >
             <div>
-              <h2 className="font-display text-lg font-semibold text-white">{med.name}</h2>
+              <h2
+                className="font-display text-lg font-semibold"
+                style={{ color: 'var(--text-primary)' }}
+              >
+                {med.name}
+              </h2>
               {med.generic_name && med.generic_name !== med.name && (
-                <p className="text-slate-500 text-xs mt-0.5">Generic: {med.generic_name}</p>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.125rem' }}>
+                  Generic: {med.generic_name}
+                </p>
               )}
             </div>
-            <div className="text-right">
-              {med.dosage && <p className="text-teal-400 text-sm font-mono">{med.dosage}</p>}
-              {med.frequency && <p className="text-slate-400 text-xs mt-0.5">{med.frequency}</p>}
+            <div className="text-right flex-shrink-0">
+              {med.dosage && (
+                <p
+                  className="text-sm font-mono font-semibold"
+                  style={{ color: 'var(--teal-text)' }}
+                >
+                  {med.dosage}
+                </p>
+              )}
+              {med.frequency && (
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', marginTop: '0.125rem' }}>
+                  {med.frequency}
+                </p>
+              )}
+              {med.duration && (
+                <div className="flex items-center gap-1 justify-end mt-1">
+                  <Clock className="w-3 h-3" style={{ color: 'var(--text-muted)' }} />
+                  <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{med.duration}</span>
+                </div>
+              )}
             </div>
           </div>
 
           <div className="space-y-3">
-            {/* Purpose */}
+
+            {/* Why doctor prescribed */}
             {med.purpose && (
-              <div className="p-3 bg-slate-800/40 rounded-xl">
-                <p className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">What it's for</p>
-                <p className="text-slate-300 text-sm leading-relaxed">{med.purpose}</p>
+              <div className="rx-purpose-box">
+                <p className="rx-label text-xs font-semibold uppercase tracking-wider mb-1.5">
+                  💊 Why the doctor prescribed this
+                </p>
+                <p className="rx-body text-sm leading-relaxed">{med.purpose}</p>
               </div>
             )}
 
             {/* How to take */}
             {med.instructions && (
-              <div className="p-3 bg-slate-800/40 rounded-xl">
-                <p className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">How to take it</p>
-                <p className="text-slate-300 text-sm leading-relaxed">{med.instructions}</p>
+              <div className="rx-info-box">
+                <p className="rx-label text-xs font-semibold uppercase tracking-wider mb-1.5">
+                  📋 How to take it
+                </p>
+                <p className="rx-body text-sm leading-relaxed">{med.instructions}</p>
               </div>
             )}
 
-            {/* Side Effects */}
+            {/* Side effects */}
             {med.side_effects?.length > 0 && (
-              <div className="p-3 bg-slate-800/40 rounded-xl">
-                <p className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-2">Common side effects</p>
+              <div className="rx-info-box">
+                <p className="rx-label text-xs font-semibold uppercase tracking-wider mb-2">
+                  ⚡ Common side effects
+                </p>
                 <div className="flex flex-wrap gap-1.5">
                   {med.side_effects.map((se, j) => (
-                    <span key={j} className="text-xs bg-yellow-500/10 text-yellow-400/80 border border-yellow-500/20 px-2 py-0.5 rounded-full">
+                    <span
+                      key={j}
+                      className="text-xs px-2.5 py-1 rounded-full"
+                      style={{
+                        background: 'var(--yellow-bg)',
+                        color: 'var(--yellow-text)',
+                        border: '1px solid var(--yellow-border)',
+                      }}
+                    >
                       {se}
                     </span>
                   ))}
@@ -97,37 +160,32 @@ new Notification(`💊 Time for ${medName}`, { body: "Take your medication now" 
 
             {/* Warnings */}
             {med.warnings?.length > 0 && (
-              <div className="p-3 bg-red-500/8 border border-red-500/20 rounded-xl">
+              <div className="rx-warning-box">
                 <div className="flex items-center gap-1.5 mb-2">
-                  <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
-                  <p className="text-xs font-mono text-red-400/80 uppercase tracking-wider">Important warnings</p>
+                  <AlertTriangle className="w-3.5 h-3.5 rx-warn-label" style={{ color: 'var(--red-text)' }} />
+                  <p className="rx-warn-label text-xs font-semibold uppercase tracking-wider">
+                    Important warnings
+                  </p>
                 </div>
-                <ul className="space-y-1">
+                <ul className="space-y-1.5">
                   {med.warnings.map((w, j) => (
-                    <li key={j} className="text-red-300/80 text-xs leading-relaxed flex gap-2">
-                      <span className="text-red-500 mt-0.5">•</span>
-                      {w}
+                    <li key={j} className="text-sm leading-relaxed flex gap-2 rx-warn-body">
+                      <span style={{ color: 'var(--red-text)', marginTop: '0.125rem', flexShrink: 0 }}>•</span>
+                      <span style={{ color: 'var(--red-body)' }}>{w}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             )}
 
-            {/* Duration */}
-            {med.duration && (
-              <div className="flex items-center gap-2 text-sm">
-                <Info className="w-4 h-4 text-slate-500" />
-                <span className="text-slate-400">Course duration: <span className="text-slate-200">{med.duration}</span></span>
-              </div>
-            )}
           </div>
         </div>
       ))}
 
       {/* Actions */}
       <div className="flex gap-3 animate-fade-up">
-        <Link to="/prescription" className="btn-secondary flex-1 text-center text-sm">
-          <RefreshCw className="w-4 h-4 inline mr-2" />
+        <Link to="/prescription" className="btn-secondary flex-1 text-center text-sm flex items-center justify-center gap-2">
+          <RefreshCw className="w-4 h-4" />
           New Prescription
         </Link>
         <Link to="/history" className="btn-ghost text-sm flex items-center gap-1">
@@ -136,9 +194,13 @@ new Notification(`💊 Time for ${medName}`, { body: "Take your medication now" 
       </div>
 
       {/* Disclaimer */}
-      <div className="p-4 bg-slate-900/50 border border-slate-800 rounded-xl">
-        <p className="text-slate-500 text-xs leading-relaxed">
-          ⚠️ This explanation is for educational purposes only. Always follow your doctor's prescribed instructions. Consult your pharmacist for drug interactions and personalized advice.
+      <div
+        className="p-4 rounded-xl"
+        style={{ background: 'var(--bg-card-inner)', border: '1px solid var(--border-card)' }}
+      >
+        <p className="text-xs leading-relaxed flex gap-2" style={{ color: 'var(--text-muted)' }}>
+          <Info className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+          This explanation is for educational purposes only. Always follow your doctor's instructions exactly. Consult your pharmacist for drug interactions and personalised advice.
         </p>
       </div>
     </div>

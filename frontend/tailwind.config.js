@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
+  darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
@@ -20,19 +21,16 @@ export default {
           700: '#0f766e',
           800: '#115e59',
           900: '#134e4a',
+          950: '#042f2e',
         },
-        slate: {
-          850: '#0f172a',
-          950: '#020617',
-        }
       },
       animation: {
-        'fade-up': 'fadeUp 0.5s ease forwards',
+        'fade-up': 'fadeUp 0.45s ease forwards',
         'pulse-slow': 'pulse 3s ease-in-out infinite',
       },
       keyframes: {
         fadeUp: {
-          '0%': { opacity: 0, transform: 'translateY(16px)' },
+          '0%':   { opacity: 0, transform: 'translateY(12px)' },
           '100%': { opacity: 1, transform: 'translateY(0)' },
         },
       },

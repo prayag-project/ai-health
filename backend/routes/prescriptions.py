@@ -6,49 +6,48 @@ from models.user import User, PrescriptionQuery
 from schemas.schemas import PrescriptionRequest, PrescriptionResponse
 from ml.ml_client import call_prescription_ml, mock_prescription_response
 from typing import List
-from models.user import User
 import httpx
 
 router = APIRouter(prefix="/prescriptions", tags=["prescriptions"])
+
 USE_MOCK = False
 ML_SERVICE_URL = "http://localhost:8003"
 
+
+# ── OCR: Receives base64 image, forwards to ML service, returns transcribed text
 @router.post("/ocr")
 async def ocr_prescription(payload: dict):
+    """
+    Accepts { image_base64: "..." } from frontend.
+    Forwards to ML service /ml/ocr.
+    Returns { transcribed_text: "..." } back to frontend.
+    """
     try:
         async with httpx.AsyncClient(timeout=60.0) as client:
             response = await client.post(
                 f"{ML_SERVICE_URL}/ml/ocr",
                 json=payload
             )
-
             print("OCR STATUS:", response.status_code)
-            print("OCR RESPONSE:", response.text[:200])  # debug
-
+            print("OCR RESPONSE:", response.text[:200])
             response.raise_for_status()
-
             return response.json()
 
     except httpx.RequestError as e:
         print("OCR CONNECTION ERROR:", e)
-        raise HTTPException(status_code=503, detail="Cannot connect to ML OCR service")
-
+        raise HTTPException(
+            status_code=503,
+            detail="Cannot connect to ML OCR service. Make sure ml_service is running on port 8003."
+        )
     except httpx.HTTPStatusError as e:
         print("OCR HTTP ERROR:", e.response.text)
-        raise HTTPException(status_code=500, detail="ML OCR failed")
-
+        raise HTTPException(status_code=500, detail="ML OCR service returned an error.")
     except Exception as e:
         print("OCR UNKNOWN ERROR:", e)
-        raise HTTPException(status_code=500, detail="Unexpected OCR error")
-'''@router.post("/ocr")
-async def ocr_prescription(payload: dict):
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            f"{ML_SERVICE_URL}/ml/ocr",
-            json=payload
-        )
-        return response.json()'''
+        raise HTTPException(status_code=500, detail=f"Unexpected OCR error: {str(e)}")
 
+
+# ── Explain: Takes prescription text, returns full medication breakdown
 @router.post("/explain", response_model=PrescriptionResponse, status_code=201)
 async def explain_prescription(
     payload: PrescriptionRequest,
@@ -85,6 +84,7 @@ async def explain_prescription(
     return query
 
 
+# ── History: Returns all prescriptions for the current user
 @router.get("/history")
 def get_prescription_history(
     db: Session = Depends(get_db),
@@ -110,6 +110,7 @@ def get_prescription_history(
     ]
 
 
+# ── Get single result by ID
 @router.get("/{query_id}", response_model=PrescriptionResponse)
 def get_prescription_result(
     query_id: int,

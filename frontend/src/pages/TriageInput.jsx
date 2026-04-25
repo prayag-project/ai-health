@@ -38,7 +38,6 @@ export default function TriageInput() {
       <div className="animate-fade-up">
         {/* Header */}
         <div className="flex items-center gap-3 mb-2">
-<<<<<<< HEAD
           <div className="w-10 h-10 rounded-xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center">
             <Activity className="w-5 h-5 text-teal-400" />
           </div>
@@ -49,18 +48,6 @@ export default function TriageInput() {
         </p>
 
         {/* Form */}
-=======
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'var(--accent-bg)', border: '1px solid var(--accent-border)' }}>
-            <Activity className="w-5 h-5" style={{ color: 'var(--accent)' }} />
-          </div>
-          <h1 className="font-display text-2xl font-bold" style={{ color: 'var(--text)' }}>Symptom Check</h1>
-        </div>
-        <p className="text-sm mb-8 leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-          Describe your symptoms in plain language. Be as specific as possible — include duration, severity, and any relevant context.
-        </p>
-
-        {/* Form Card */}
->>>>>>> d1bfce473f95cb6ddefbdde1ebb667a5e4283ecc
         <div className="card p-6 mb-5">
           <form onSubmit={handleSubmit}>
             <label className="label text-base mb-3">What symptoms are you experiencing?</label>
@@ -73,24 +60,14 @@ export default function TriageInput() {
               disabled={loading}
             />
             <div className="flex items-center justify-between mb-5">
-<<<<<<< HEAD
               <span className="text-xs text-slate-600">{symptoms.length} characters</span>
               {symptoms.length > 0 && symptoms.length < 10 && (
                 <span className="text-xs text-orange-400">Add more detail for better results</span>
-=======
-              <span className="text-xs" style={{ color: 'var(--text-faint)' }}>{symptoms.length} characters</span>
-              {symptoms.length > 0 && symptoms.length < 10 && (
-                <span className="text-xs text-orange-500">Add more detail for better results</span>
->>>>>>> d1bfce473f95cb6ddefbdde1ebb667a5e4283ecc
               )}
             </div>
 
             {error && (
-<<<<<<< HEAD
               <div className="mb-4 p-3 bg-red-500/10 border border-red-500/25 rounded-lg text-red-400 text-sm flex items-center gap-2">
-=======
-              <div className="mb-4 p-3 rounded-lg text-sm flex items-center gap-2" style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', color: '#dc2626' }}>
->>>>>>> d1bfce473f95cb6ddefbdde1ebb667a5e4283ecc
                 <AlertTriangle className="w-4 h-4 flex-shrink-0" />
                 {error}
               </div>
@@ -102,7 +79,6 @@ export default function TriageInput() {
               className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
-<<<<<<< HEAD
                 <>
                   <div className="w-4 h-4 border-2 border-slate-950/30 border-t-slate-950 rounded-full animate-spin" />
                   Analyzing symptoms...
@@ -112,11 +88,6 @@ export default function TriageInput() {
                   <Send className="w-4 h-4" />
                   Analyze Symptoms
                 </>
-=======
-                <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Analyzing symptoms...</>
-              ) : (
-                <><Send className="w-4 h-4" />Analyze Symptoms</>
->>>>>>> d1bfce473f95cb6ddefbdde1ebb667a5e4283ecc
               )}
             </button>
           </form>
@@ -124,24 +95,13 @@ export default function TriageInput() {
 
         {/* Examples */}
         <div>
-<<<<<<< HEAD
           <p className="text-slate-500 text-xs mb-3 uppercase tracking-wider font-mono">Try an example</p>
-=======
-          <p className="text-xs mb-3 uppercase tracking-wider font-mono" style={{ color: 'var(--text-muted)' }}>Try an example</p>
->>>>>>> d1bfce473f95cb6ddefbdde1ebb667a5e4283ecc
           <div className="space-y-2">
             {EXAMPLES.map((ex, i) => (
               <button
                 key={i}
                 onClick={() => setSymptoms(ex)}
-<<<<<<< HEAD
                 className="w-full text-left p-3 rounded-xl border border-slate-800 hover:border-teal-500/30 hover:bg-teal-500/5 text-slate-400 hover:text-slate-200 text-sm transition-all duration-200"
-=======
-                className="w-full text-left p-3 rounded-xl text-sm transition-all duration-200"
-                style={{ border: '1px solid var(--border)', color: 'var(--text-muted)', background: 'var(--card)' }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--text)' }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-muted)' }}
->>>>>>> d1bfce473f95cb6ddefbdde1ebb667a5e4283ecc
               >
                 "{ex}"
               </button>
@@ -150,15 +110,9 @@ export default function TriageInput() {
         </div>
 
         {/* Disclaimer */}
-<<<<<<< HEAD
         <div className="mt-6 p-4 bg-slate-900/50 border border-slate-800 rounded-xl">
           <p className="text-slate-500 text-xs leading-relaxed">
             ⚠️ <strong className="text-slate-400">Medical Disclaimer:</strong> This tool provides educational health guidance only and does not replace professional medical consultation. In case of emergency, call your local emergency number immediately.
-=======
-        <div className="mt-6 p-4 rounded-xl" style={{ background: 'var(--accent-bg)', border: '1px solid var(--accent-border)' }}>
-          <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-            ⚠️ <strong style={{ color: 'var(--text)' }}>Medical Disclaimer:</strong> This tool provides educational health guidance only and does not replace professional medical consultation. In case of emergency, call your local emergency number immediately.
->>>>>>> d1bfce473f95cb6ddefbdde1ebb667a5e4283ecc
           </p>
         </div>
       </div>

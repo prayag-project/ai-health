@@ -4,13 +4,15 @@ const ThemeContext = createContext(null)
 
 export function ThemeProvider({ children }) {
   const [isDark, setIsDark] = useState(() => {
-    // Remember user's preference
-    const saved = localStorage.getItem('theme')
-    return saved ? saved === 'dark' : true // default to dark
+    // On first load, check if user previously chose a theme
+    // If not, default to dark mode
+    const saved = localStorage.getItem('mediAI_theme')
+    return saved ? saved === 'dark' : true
   })
 
   useEffect(() => {
     const root = document.documentElement
+
     if (isDark) {
       root.classList.add('dark')
       root.classList.remove('light')
@@ -18,7 +20,9 @@ export function ThemeProvider({ children }) {
       root.classList.add('light')
       root.classList.remove('dark')
     }
-    localStorage.setItem('theme', isDark ? 'dark' : 'light')
+
+    // Save preference so it persists after page refresh
+    localStorage.setItem('mediAI_theme', isDark ? 'dark' : 'light')
   }, [isDark])
 
   const toggleTheme = () => setIsDark(prev => !prev)
@@ -30,4 +34,5 @@ export function ThemeProvider({ children }) {
   )
 }
 
+// Hook to use theme anywhere: const { isDark, toggleTheme } = useTheme()
 export const useTheme = () => useContext(ThemeContext)
