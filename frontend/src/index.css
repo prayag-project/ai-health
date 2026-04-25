@@ -2,252 +2,317 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ═══════════════════════════════════════════════════════════
-   CSS VARIABLES — one place controls all colours
-   Dark mode = default. Light mode overrides below.
-═══════════════════════════════════════════════════════════ */
-
-:root {
-  --bg-page:        #020617;
-  --bg-card:        rgba(15, 23, 42, 0.70);
-  --bg-card-inner:  rgba(30, 41, 59, 0.55);
-  --bg-input:       #0f172a;
-  --bg-nav:         rgba(2, 6, 23, 0.88);
-
-  --border-card:    rgba(51, 65, 85, 0.60);
-  --border-input:   #334155;
-  --border-nav:     rgba(51, 65, 85, 0.50);
-
-  --text-primary:   #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted:     #475569;
-  --text-input:     #f1f5f9;
-  --text-placeholder: #475569;
-
-  --teal-main:      #14b8a6;
-  --teal-hover:     #2dd4bf;
-  --teal-subtle:    rgba(20, 184, 166, 0.12);
-  --teal-border:    rgba(20, 184, 166, 0.30);
-  --teal-text:      #2dd4bf;
-
-  --red-bg:         rgba(239, 68, 68, 0.10);
-  --red-border:     rgba(239, 68, 68, 0.25);
-  --red-text:       #f87171;
-  --red-body:       rgba(248, 113, 113, 0.80);
-
-  --yellow-bg:      rgba(234, 179, 8, 0.10);
-  --yellow-border:  rgba(234, 179, 8, 0.25);
-  --yellow-text:    #fbbf24;
-
-  --btn-sec-bg:     #1e293b;
-  --btn-sec-hover:  #334155;
-  --btn-sec-text:   #cbd5e1;
-  --btn-sec-border: #334155;
+/* ── DARK MODE ───────────────────────────────────────────────────── */
+:root,
+.dark {
+  --bg: #020617;
+  --surface: #0f172a;
+  --card: #1e293b;
+  --card-hover: #263548;
+  --border: #334155;
+  --text: #f1f5f9;
+  --text-sub: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-faint: #64748b;
+  --accent: #14b8a6;
+  --accent-hover: #0d9488;
+  --accent-bg: rgba(20, 184, 166, 0.15);
+  --accent-border: rgba(20, 184, 166, 0.35);
 }
 
-/* ── LIGHT MODE — rich, saturated, not washed out ── */
-html.light {
-  /* Page background: deep teal-green tint, not plain white */
-  --bg-page:        #cff3ec;
-
-  /* Cards: clean white with slight warmth */
-  --bg-card:        rgba(255, 255, 255, 0.97);
-
-  /* Inner sections inside cards: soft teal-grey tint */
-  --bg-card-inner:  rgba(36, 97, 84, 0.35);
-
-  /* Inputs: pure white */
-  --bg-input:       #ffffff;
-
-  /* Navbar: white with teal tint */
-  --bg-nav:         rgba(255, 255, 255, 0.95);
-
-  /* Borders: visible teal tint so structure is clear */
-  --border-card:    rgba(20, 184, 166, 0.22);
-  --border-input:   #a7f3d0;
-  --border-nav:     rgba(20, 184, 166, 0.18);
-
-  /* Text: very dark for contrast on light background */
-  --text-primary:   #57a6a5;   /* teal-950 — deep teal-black for headings */
-  --text-secondary: #0f4b43;   /* dark teal-slate for body text */
-  --text-muted:     #5eada0;   /* muted teal-grey */
-  --text-input:     #042f2e;
-  --text-placeholder: #9ecfc9;
-
-  /* Teal stays vivid */
-  --teal-main:      #0d9488;   /* slightly darker teal for contrast on light */
-  --teal-hover:     #14b8a6;
-  --teal-subtle:    rgba(13, 148, 136, 0.10);
-  --teal-border:    rgba(13, 148, 136, 0.30);
-  --teal-text:      #0d9488;
-
-  /* Status colours adjusted for light background */
-  --red-bg:         rgba(220, 38, 38, 0.08);
-  --red-border:     rgba(220, 38, 38, 0.22);
-  --red-text:       #b91c1c;
-  --red-body:       #b91c1c;
-
-  --yellow-bg:      rgba(180, 83, 9, 0.08);
-  --yellow-border:  rgba(180, 83, 9, 0.22);
-  --yellow-text:    #92400e;
-
-  /* Secondary button */
-  --btn-sec-bg:     #ccfbf1;
-  --btn-sec-hover:  #99f6e4;
-  --btn-sec-text:   #134e4a;
-  --btn-sec-border: #5eead4;
+/* ── LIGHT MODE ──────────────────────────────────────────────────── */
+.light {
+  --bg: #f0f9f8;
+  --surface: #ffffff;
+  --card: #ffffff;
+  --card-hover: #f8fffe;
+  --border: #d1e9e6;
+  --text: #0c1f1e;
+  --text-sub: #1e3a38;
+  --text-muted: #2d6a65;
+  --text-faint: #5a9e99;
+  --accent: #0d9488;
+  --accent-hover: #0f766e;
+  --accent-bg: rgba(13, 148, 136, 0.1);
+  --accent-border: rgba(13, 148, 136, 0.3);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   BASE
-═══════════════════════════════════════════════════════════ */
 @layer base {
-  * { box-sizing: border-box; }
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    transition: background-color 0.3s ease;
+  }
 
   body {
-    background-color: var(--bg-page);
-    color: var(--text-primary);
-    font-family: 'DM Sans', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
-    background-image:
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(20, 184, 166, 0.10), transparent),
-      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(13, 148, 136, 0.05), transparent);
-    background-attachment: fixed;
-    transition: background-color 0.25s ease, color 0.25s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    min-height: 100vh;
   }
 
-  h1, h2, h3 { font-family: 'Fraunces', serif; }
+  .dark body {
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(20, 184, 166, 0.12), transparent),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(13, 148, 136, 0.06), transparent);
+    background-attachment: fixed;
+  }
+
+  .light body {
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(13, 148, 136, 0.07), transparent),
+      radial-gradient(ellipse 50% 40% at 90% 90%, rgba(20, 184, 166, 0.04), transparent);
+    background-attachment: fixed;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: 'Fraunces', serif;
+    color: var(--text);
+  }
+
+  p {
+    color: var(--text-sub);
+  }
+
+  a {
+    color: inherit;
+  }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   COMPONENTS — all use CSS vars, auto-respond to both modes
-═══════════════════════════════════════════════════════════ */
 @layer components {
 
+  /* ── Cards ── */
   .card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-card);
+    background-color: var(--card);
+    border: 1px solid var(--border);
     border-radius: 1rem;
-    backdrop-filter: blur(8px);
-    transition: background 0.25s ease, border-color 0.25s ease;
+    transition: background-color 0.3s ease, border-color 0.2s ease;
   }
 
+  .card:hover {
+    background-color: var(--card-hover);
+  }
+
+  /* ── Buttons ── */
   .btn-primary {
     @apply font-semibold px-6 py-3 rounded-xl transition-all duration-200 active:scale-95;
-    background-color: var(--teal-main);
-    color: #fff;
+    background-color: var(--accent);
+    color: #ffffff;
   }
+
   .btn-primary:hover {
-    background-color: var(--teal-hover);
-    box-shadow: 0 6px 20px rgba(20, 184, 166, 0.30);
+    background-color: var(--accent-hover);
+    box-shadow: 0 8px 25px rgba(13, 148, 136, 0.3);
   }
-  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .btn-secondary {
     @apply font-medium px-6 py-3 rounded-xl transition-all duration-200;
-    background: var(--btn-sec-bg);
-    color: var(--btn-sec-text);
-    border: 1px solid var(--btn-sec-border);
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
   }
-  .btn-secondary:hover { background: var(--btn-sec-hover); }
+
+  .btn-secondary:hover {
+    border-color: var(--accent);
+  }
 
   .btn-ghost {
     @apply font-medium px-4 py-2 rounded-lg transition-colors duration-200;
     color: var(--text-muted);
   }
-  .btn-ghost:hover { color: var(--teal-main); }
 
+  .btn-ghost:hover {
+    color: var(--accent);
+  }
+
+  /* ── Inputs ── */
   .input-field {
-    @apply w-full rounded-xl px-4 py-3 transition-all duration-200;
-    background: var(--bg-input);
-    border: 1px solid var(--border-input);
-    color: var(--text-input);
-    font-family: 'DM Sans', sans-serif;
+    width: 100%;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    @apply rounded-xl px-4 py-3 outline-none transition-all duration-200;
   }
-  .input-field::placeholder { color: var(--text-placeholder); }
+
+  .input-field::placeholder {
+    color: var(--text-faint);
+  }
+
   .input-field:focus {
-    outline: none;
-    border-color: var(--teal-main);
-    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-bg);
   }
 
+  /* ── Label ── */
   .label {
-    @apply block text-sm font-medium mb-2;
-    color: var(--text-secondary);
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
   }
 
-  /* Risk badges */
+  /* ── Navbar ── */
+  .navbar {
+    background-color: var(--surface);
+    border-bottom: 1px solid var(--border);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+
+  /* ── Text utilities using CSS vars ── */
+  .t-primary {
+    color: var(--text);
+  }
+
+  .t-sub {
+    color: var(--text-sub);
+  }
+
+  .t-muted {
+    color: var(--text-muted);
+  }
+
+  .t-faint {
+    color: var(--text-faint);
+  }
+
+  .t-accent {
+    color: var(--accent);
+  }
+
+  /* ── Accent bg ── */
+  .accent-bg {
+    background-color: var(--accent-bg);
+    border-color: var(--accent-border);
+  }
+
+  /* ── Badges ── */
   .badge-urgent {
-    background: var(--red-bg);
-    color: var(--red-text);
-    border: 1px solid var(--red-border);
-    @apply px-3 py-1 rounded-full text-sm font-semibold;
+    @apply inline-flex items-center bg-red-500/15 text-red-500 border border-red-400/40 px-3 py-1 rounded-full text-xs font-semibold tracking-wide;
   }
+
   .badge-high {
-    @apply bg-orange-500/10 text-orange-600 border border-orange-500/20 px-3 py-1 rounded-full text-sm font-semibold;
+    @apply inline-flex items-center bg-orange-500/15 text-orange-500 border border-orange-400/40 px-3 py-1 rounded-full text-xs font-semibold tracking-wide;
   }
+
   .badge-medium {
-    background: var(--yellow-bg);
-    color: var(--yellow-text);
-    border: 1px solid var(--yellow-border);
-    @apply px-3 py-1 rounded-full text-sm font-semibold;
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold tracking-wide;
+    background: rgba(202, 138, 4, 0.12);
+    color: #a16207;
+    border: 1px solid rgba(202, 138, 4, 0.35);
   }
+
   .badge-low {
-    background: var(--teal-subtle);
-    color: var(--teal-text);
-    border: 1px solid var(--teal-border);
-    @apply px-3 py-1 rounded-full text-sm font-semibold;
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold tracking-wide;
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+  }
+
+  /* Light mode badge overrides for better contrast */
+  .light .badge-medium {
+    color: #854d0e;
+    background: rgba(202, 138, 4, 0.15);
+  }
+
+  .light .badge-urgent {
+    color: #b91c1c;
+  }
+
+  .light .badge-high {
+    color: #c2410c;
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   PRESCRIPTION RESULT — section boxes using CSS vars
-═══════════════════════════════════════════════════════════ */
-.rx-purpose-box {
-  background: var(--teal-subtle);
-  border: 1px solid var(--teal-border);
-  border-radius: 0.75rem;
-  padding: 0.75rem;
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 5px;
 }
-.rx-purpose-box .rx-label { color: var(--teal-text); }
-.rx-purpose-box .rx-body  { color: var(--text-secondary); }
 
-.rx-info-box {
-  background: var(--bg-card-inner);
-  border-radius: 0.75rem;
-  padding: 0.75rem;
+::-webkit-scrollbar-track {
+  background: transparent;
 }
-.rx-info-box .rx-label { color: var(--text-secondary); }
-.rx-info-box .rx-body  { color: var(--text-secondary); }
 
-.rx-warning-box {
-  background: var(--red-bg);
-  border: 1px solid var(--red-border);
-  border-radius: 0.75rem;
-  padding: 0.75rem;
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
 }
-.rx-warning-box .rx-warn-label { color: var(--red-text); }
-.rx-warning-box .rx-warn-body  { color: var(--red-body); }
 
-/* ═══════════════════════════════════════════════════════════
-   SCROLLBAR
-═══════════════════════════════════════════════════════════ */
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border-card); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-faint);
+}
 
-/* ═══════════════════════════════════════════════════════════
-   ANIMATIONS
-═══════════════════════════════════════════════════════════ */
+/* ── Animations ── */
 .animate-fade-up {
-  animation: fadeUp 0.45s ease forwards;
+  animation: fadeUp 0.5s ease forwards;
   opacity: 0;
 }
+
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-.stagger-1 { animation-delay: 0.08s; }
-.stagger-2 { animation-delay: 0.16s; }
-.stagger-3 { animation-delay: 0.24s; }
-.stagger-4 { animation-delay: 0.32s; }
+
+.stagger-1 {
+  animation-delay: 0.1s;
+}
+
+.stagger-2 {
+  animation-delay: 0.2s;
+}
+
+.stagger-3 {
+  animation-delay: 0.3s;
+}
+
+.stagger-4 {
+  animation-delay: 0.4s;
+}
+
+/* ── Force text colors for Tailwind slate classes in light mode ── */
+.light .text-slate-100,
+.light .text-slate-200 {
+  color: var(--text) !important;
+}
+
+.light .text-slate-300,
+.light .text-slate-400 {
+  color: var(--text-muted) !important;
+}
+
+.light .text-slate-500,
+.light .text-slate-600 {
+  color: var(--text-faint) !important;
+}
+
+.light .bg-slate-900,
+.light .bg-slate-800 {
+  background-color: var(--card) !important;
+}
+
+.light .bg-slate-800\/40,
+.light .bg-slate-800\/60 {
+  background-color: rgba(13, 148, 136, 0.06) !important;
+}
+
+.light .border-slate-700,
+.light .border-slate-800 {
+  border-color: var(--border) !important;
+}
+
+.light .text-white {
+  color: var(--text) !important;
+}
