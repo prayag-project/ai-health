@@ -5,8 +5,11 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 
 
+# Add this line with the other include_router lines
+
+
 from core.database import engine, Base
-from routes import auth, triage, prescriptions, users
+from routes import auth, triage, prescriptions, users, reminders
 
 from dotenv import load_dotenv
 import os
@@ -42,6 +45,8 @@ app.include_router(auth.router, prefix="/api")
 app.include_router(triage.router, prefix="/api")
 app.include_router(prescriptions.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
+app.include_router(reminders.router, prefix="/api")
+
 
 
 @app.get("/")

@@ -46,5 +46,11 @@ export const userService = {
   changePassword: (data) => api.put('/users/me/password', data),
   getDashboard: () => api.get('/users/me/dashboard'),
 }
-
+// ── Reminders ─────────────────────────────────────────────────────
+export const reminderService = {
+  create: (medication_name, dose_times) =>
+    api.post('/reminders', { medication_name, dose_times }),
+  getAll: () => api.get('/reminders'),
+  delete: (id) => api.delete(`/reminders/${id}`),
+}
 export default api
