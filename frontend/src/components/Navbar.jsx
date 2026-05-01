@@ -1,7 +1,7 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
-import { Activity, LogOut, Clock, Home, Sun, Moon } from 'lucide-react'
+import { Activity, LogOut, Clock, Home, Sun, Moon, Pill } from 'lucide-react'
 
 export default function Navbar() {
   const { user, logout } = useAuth()
@@ -61,7 +61,7 @@ export default function Navbar() {
               {[
                 { path: '/dashboard', icon: <Home className="w-4 h-4" />, label: 'Dashboard' },
                 { path: '/triage',    icon: <Activity className="w-4 h-4" />, label: 'Symptom Check' },
-                { path: '/prescription', icon: <span className="text-sm">💊</span>, label: 'Prescription' },
+                { path: '/prescription', icon: <Pill className="w-4 h-4" />, label: 'Prescription' },
                 { path: '/history',   icon: <Clock className="w-4 h-4" />, label: 'History' },
               ].map(({ path, icon, label }) => (
                 <Link

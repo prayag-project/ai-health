@@ -155,7 +155,7 @@ export default function PrescriptionInput() {
         ) : (
           /* Image preview with remove button */
           <div className="relative">
-            <div className="flex items-start gap-4 p-4 bg-slate-800/50 rounded-xl border border-slate-700">
+            <div className="flex items-start gap-4 p-4  rounded-xl border border-slate-700">
               {imagePreview && (
                 <img
                   src={imagePreview}
@@ -175,7 +175,7 @@ export default function PrescriptionInput() {
                   </div>
                 ) : text ? (
                   <div className="flex items-center gap-1.5 mt-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-teal-400"></div>
+                    <div className="w-1.5 h-1.5 rounded-full"></div>
                     <span className="text-xs text-teal-400">Prescription read successfully</span>
                   </div>
                 ) : null}

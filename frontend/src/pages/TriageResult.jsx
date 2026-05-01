@@ -95,7 +95,7 @@ export default function TriageResult() {
       {/* Possible Conditions */}
       {result.conditions?.length > 0 && (
         <div className="card p-5 animate-fade-up stagger-2">
-          <h3 className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-4">Possible Conditions</h3>
+          <h3 className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-4"  >Possible Conditions</h3>
           <div className="space-y-3">
             {result.conditions.map((cond, i) => (
               <div key={i} className="flex items-start gap-3 p-3 bg-slate-800/40 rounded-xl">
@@ -115,7 +115,11 @@ export default function TriageResult() {
                   {cond.contributing_symptoms?.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mt-2">
                       {cond.contributing_symptoms.map((s, j) => (
-                        <span key={j} className="text-xs bg-slate-700/60 text-slate-400 px-2 py-0.5 rounded-full">{s}</span>
+                        <span key={j} className="text-xs bg-slate-700/60 text-slate-400 px-2 py-0.5 rounded-full" style={{
+                              background: 'var(--card)',
+                              border: '1px solid var(--border)',
+                              color: 'var(--text-muted)',
+                            }}>{s}</span>
                       ))}
                     </div>
                   )}
@@ -154,11 +158,11 @@ export default function TriageResult() {
       </div>
 
       {/* Disclaimer */}
-      <div className="p-4 bg-slate-900/50 border border-slate-800 rounded-xl">
-        <p className="text-slate-500 text-xs leading-relaxed">
-          ⚠️ This analysis is for educational purposes only. It does not constitute a medical diagnosis. Always consult a qualified healthcare professional for proper diagnosis and treatment.
-        </p>
-      </div>
+<div className="mt-6 p-4 rounded-xl" style={{ background: 'var(--accent-bg)', border: '1px solid var(--accent-border)' }}>
+          <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+            ⚠️ <strong style={{ color: 'var(--text)' }}>Medical Disclaimer:</strong> This tool provides educational health guidance only and does not replace professional medical consultation. In case of emergency, call your local emergency number immediately.
+          </p>
+        </div>
     </div>
   )
 }

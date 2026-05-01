@@ -110,9 +110,9 @@ export default function TriageInput() {
         </div>
 
         {/* Disclaimer */}
-        <div className="mt-6 p-4 bg-slate-900/50 border border-slate-800 rounded-xl">
-          <p className="text-slate-500 text-xs leading-relaxed">
-            ⚠️ <strong className="text-slate-400">Medical Disclaimer:</strong> This tool provides educational health guidance only and does not replace professional medical consultation. In case of emergency, call your local emergency number immediately.
+<div className="mt-6 p-4 rounded-xl" style={{ background: 'var(--accent-bg)', border: '1px solid var(--accent-border)' }}>
+          <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+            ⚠️ <strong style={{ color: 'var(--text)' }}>Medical Disclaimer:</strong> This tool provides educational health guidance only and does not replace professional medical consultation. In case of emergency, call your local emergency number immediately.
           </p>
         </div>
       </div>
