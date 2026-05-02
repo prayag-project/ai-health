@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 from core.database import Base
 
+
 class MedicationReminder(Base):
     __tablename__ = "medication_reminders"
     id = Column(Integer, primary_key=True, index=True)
@@ -13,6 +14,26 @@ class MedicationReminder(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     user = relationship("User")
+
+
+# ── NEW: Patient profile — created by a doctor for their patient ──────────────
+class PatientProfile(Base):
+    __tablename__ = "patient_profiles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    doctor_id = Column(Integer, ForeignKey("users.id"), nullable=False)  # logged-in doctor
+    name = Column(String(100), nullable=False)
+    age = Column(Integer, nullable=True)
+    gender = Column(String(20), nullable=True)       # Male / Female / Other
+    phone = Column(String(20), nullable=True)
+    blood_group = Column(String(10), nullable=True)  # A+, B-, O+, etc.
+    allergies = Column(Text, nullable=True)          # free text
+    notes = Column(Text, nullable=True)              # extra doctor notes
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    doctor = relationship("User", back_populates="patients")
+    prescriptions = relationship("PrescriptionQuery", back_populates="patient")
+
 
 class User(Base):
     __tablename__ = "users"
@@ -25,6 +46,7 @@ class User(Base):
 
     triage_queries = relationship("TriageQuery", back_populates="user", cascade="all, delete")
     prescription_queries = relationship("PrescriptionQuery", back_populates="user", cascade="all, delete")
+    patients = relationship("PatientProfile", back_populates="doctor", cascade="all, delete")  # NEW
 
 
 class TriageQuery(Base):
@@ -33,8 +55,8 @@ class TriageQuery(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     symptoms = Column(Text, nullable=False)
-    risk_level = Column(String(20))           # URGENT | HIGH | MEDIUM | LOW
-    conditions = Column(JSON)                  # list of {name, confidence, explanation, contributing_symptoms}
+    risk_level = Column(String(20))
+    conditions = Column(JSON)
     home_care = Column(Text)
     doctor_recommendation = Column(Text)
     summary = Column(String(300))
@@ -48,10 +70,13 @@ class PrescriptionQuery(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    patient_id = Column(Integer, ForeignKey("patient_profiles.id"), nullable=True)  # NEW — links to patient
     prescription_text = Column(Text, nullable=False)
-    medications = Column(JSON)                  # list of medication explanations
+    medications = Column(JSON)
     medication_count = Column(Integer, default=0)
     summary = Column(String(300))
+    is_voice_entry = Column(Boolean, default=False)   # NEW — True when dictated by voice
     created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="prescription_queries")
+    patient = relationship("PatientProfile", back_populates="prescriptions")  # NEW

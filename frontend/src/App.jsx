@@ -15,10 +15,10 @@ import PrescriptionResult from './pages/PrescriptionResult'
 import History from './pages/History'
 import Profile from './pages/Profile'
 import NotFound from './pages/NotFound'
-// Add this import at the top with others
 import Reminders from './pages/Reminders'
+import VoicePrescription from './pages/VoicePrescription'   // NEW
+import PatientHistory from './pages/PatientHistory'         // NEW
 
-// Add this route inside your Routes, with the other ProtectedRoutes
 export default function App() {
   return (
     <AuthProvider>
@@ -39,6 +39,10 @@ export default function App() {
           <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/reminders" element={<ProtectedRoute><Reminders /></ProtectedRoute>} />
+
+          {/* NEW */}
+          <Route path="/voice-prescription" element={<ProtectedRoute><VoicePrescription /></ProtectedRoute>} />
+          <Route path="/patients/:id/history" element={<ProtectedRoute><PatientHistory /></ProtectedRoute>} />
 
           {/* Fallback */}
           <Route path="*" element={<NotFound />} />
